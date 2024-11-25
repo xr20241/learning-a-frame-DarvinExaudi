@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+</head>
+<body>
+    <script>
+        AFRAME.registerComponent('soundcontroller', {
+            init: function() {
+                let el = this.el;
+                el.addEventListener('click', function(ev) {
+                    let id = ev.srcElement.id;
+                    console.log(`%c${id}`, "font-size:2em;");
+                    let speaker = document.querySelector("#speaker");
+                    let currentVolume = speaker.components.sound.data.volume;
+
+                    if (id == "play") {
+                        speaker.components.sound.playSound();
+                    } else if (id == "pause") {
+                        speaker.components.sound.pauseSound();
+                    } else if (id == "stop") {
+                        speaker.components.sound.stopSound();
+                    } else if (id == "volume-up") {
+                        let newVolume = currentVolume + 0.1;
+                        if(newVolume <= 1){
+                            speaker.setAttribute('sound', 'volume', newVolume);
+                        }
+                    } else if (id == "volume-down") {
+                        let newVolume = currentVolume - 0.1;
+                        if(newVolume >= 0){
+                            speaker.setAttribute('sound', 'volume', newVolume);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+    <a-scene>
+        <a-camera>
+            <a-cursor raycaster="objects:a-box"></a-cursor>
+        </a-camera>
+        <a-sky color="lightblue"></a-sky>
+        <a-ocean width="100" depth="100" density="40"></a-ocean>
+        <a-gltf-model
+            src="models/Island.gltf"
+            scale="0.1 0.1 0.1"
+            rotation="0 150 0"
+            position="0 0 -3"
+        ></a-gltf-model>
+        <a-box id="speaker" color="#F00" position="0 1.5 -3"
+            sound="src:audios/The Look!.wav;autoplay:false;volume:0.5;"
+        ></a-box>
+        <a-box soundcontroller id="play" color="#500" position="0 1 -2" scale="0.5 0.5 0.5"></a-box>
+        <a-box soundcontroller id="pause" color="#550" position="1.5 1 -2" scale="0.5 0.5 0.5"></a-box>
+        <a-box soundcontroller id="stop" color="#050" position="-1.5 1 -2" scale="0.5 0.5 0.5"></a-box>
+        
+        <a-box soundcontroller id="volume-up" color="white" position="1.5 2 -2" scale="0.5 0.5 0.5"></a-box>
+        <a-text value="Volume +" align="center" width="2" position="1.5 2 -1.75" color="#000"></a-text>
+        
+        <a-box soundcontroller id="volume-down" color="yellow" position="-1.5 2 -2" scale="0.5 0.5 0.5"></a-box>
+        <a-text value="Volume -" align="center" width="2" position="-1.5 2 -1.75" color="#000"></a-text>
+    </a-scene>
+</body>
+</html>
